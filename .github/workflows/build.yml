@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches:
+      - mai2js
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.14.1"
+
+      - run: npm install
+
+      - run: npm run coverage
+
+      #- name: Notify
+      #  if: success()
+      #  run: "curl https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DING_TOKEN }} -H 'Content-Type: application/json' -d @/tmp/coverage-message.json"
+      # publish is disabled since such an action would make all source visible by public.
+      # - name: Publish
+      #   if: success()
+      #   uses: crazy-max/ghaction-github-pages@v1
+      #   with:
+      #     repo: "yangzhao28/mai-coverage"
+      #     target_branch: gh-pages
+      #     build_dir: coverage
+      #   env:
+      #     GITHUB_PAT: ${{ secrets.GITPAGE_PAT }}
+
+      #- name: Commit coverage
+      #  run: |
+      #    git config --local user.email "action@github.com"
+      #    git config --local user.name "GitHub Action"
+      #    git add .coverage.svg
+      #    git commit -m "update coverage" -a
+      #- name: Push coverage
+      #  uses: ad-m/github-push-action@master
+      #  with:
+      #    github_token: ${{ secrets.GIT_COVERAGE_ACCESS_TOKEN }}
+      #    branch: coverage
+      #    force: true
